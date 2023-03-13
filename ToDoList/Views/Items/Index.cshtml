@@ -14,6 +14,7 @@
     
     @Html.ActionLink($"{item.Description}", "Details", new { id = item.ItemId}) @item.Category.Name   @item.DueDate.ToShortDateString()
 
+
     @using (Html.BeginForm("MarkComplete", "Items"))
 {
     @Html.Hidden("Id", item.ItemId)
