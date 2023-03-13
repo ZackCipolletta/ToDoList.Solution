@@ -16,10 +16,17 @@ namespace ToDoList.Controllers
       _db = db;
     }
 
-    public ActionResult Index()
+    public ActionResult Index(string sortBy)
     {
-      List<Item> model = _db.Items.Include(item => item.Category).ToList();
-      // ViewBag.PageTitle = "View All Items"; if using this, naviage to _Layout.cshtml and update the head to include the page title from the ViewBag property.  Be sure to set this for each page or the default title for the page will be the current URL.
+      List<Item> model = null;
+      if (sortBy ==null)
+      {
+        model = _db.Items.Include(item => item.Category).ToList();
+      } 
+      else if (sortBy.Equals("date"))
+      {
+        model = _db.Items.OrderBy(item => item.DueDate).Include(item => item.Category).ToList();
+      }
       return View(model);
     }
 

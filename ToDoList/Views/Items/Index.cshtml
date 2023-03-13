@@ -3,13 +3,17 @@
 }
 
 @using ToDoList.Models;
+@model List<Item>;
 
 <h1>Items</h1>
 
 <ul>
   @foreach(Item item in Model)
   {
-  <li class="inLine">@Html.ActionLink($"{item.Description}", "Details", new { id = item.ItemId}) | @item.Category.Name 
+  <li>
+    
+    @Html.ActionLink($"{item.Description}", "Details", new { id = item.ItemId}) @item.Category.Name   @item.DueDate.ToShortDateString()
+
     @using (Html.BeginForm("MarkComplete", "Items"))
 {
     @Html.Hidden("Id", item.ItemId)
@@ -18,6 +22,7 @@
 }
   </li>   
   }
+    <a name="date">@Html.ActionLink("Sort by date", "Index", "Items", new {sortBy = "date"})</a>
 </ul>
 
 <p>@Html.ActionLink("Add new item", "Create")</p>
