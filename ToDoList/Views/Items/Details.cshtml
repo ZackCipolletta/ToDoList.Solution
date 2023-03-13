@@ -8,6 +8,15 @@
 <h2>Item Details</h2>
 <hr />
 <h3>@Html.DisplayNameFor(model => model.Description): @Html.DisplayFor(model => model.Description)</h3>
+<h3>Completed: @if(Model.Completed)
+  {
+    <span>&#9989</span>
+  } @if(!Model.Completed) {
+    <span>Not Completed</span>
+  }
+
+</h3>
+<h3>Due date: @Model.DueDate.ToShortDateString()</h3>
 <h3>@Html.DisplayNameFor(model => model.Category): @Html.DisplayFor(model => model.Category.Name)<h3>
 
 @if(@Model.JoinEntities.Count == 0)

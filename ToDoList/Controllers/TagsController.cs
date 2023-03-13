@@ -46,7 +46,7 @@ namespace ToDoList.Controllers
     public ActionResult AddItem(int id)
     {
       Tag thisTag = _db.Tags.FirstOrDefault(tags => tags.TagId == id);
-      ViewBag.ItemId = new SelectList(_db.Items, "ItemId", "Description");
+      ViewBag.ItemId = new SelectList(_db.Items, "ItemId", "Description", "Completed", "DueDate");
       return View(thisTag);
     }
 

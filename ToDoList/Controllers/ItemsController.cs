@@ -111,5 +111,15 @@ namespace ToDoList.Controllers
       return RedirectToAction("Index");
     }
 
+    [HttpPost, ActionName("MarkComplete")]
+    public ActionResult MarkComplete(Boolean Completed, int Id)
+    {
+      Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == Id);
+      thisItem.Completed = Completed;
+      _db.Items.Update(thisItem);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
   }
 }

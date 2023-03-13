@@ -1,14 +1,42 @@
 body {
   background-color: black;
-  color: white;
+	color: white;
+	font-weight: bolder;
+	font-size: larger;
+}
+
+.container {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 1rem;
+}
+
+.btn {
+	color: #333;
+	background-color: #eee;
+}
+
+ul {
+	padding: 0;
+	list-style-type: none;
+}
+
+h1 {
+	text-align: center;
+	margin-bottom: 40px;
 }
 
 div#footer {
-  position:fixed;
-  bottom:0px;
-  left:0px;
-  width:100%;
-  color:#CCC;
-  background:#333;
-  padding:8px;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	color: #CCC;
+	background: #333;
+	padding: 8px;
+}
+
+div .date-input {
+  width: 50px;
+	background-color: blue;
 }

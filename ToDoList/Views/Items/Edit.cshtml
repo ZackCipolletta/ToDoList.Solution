@@ -8,16 +8,23 @@
 
 <h4>Edit this item: @Html.DisplayFor(model => model.Description)</h4>
 
-@using (Html.BeginForm())
-{
-  @Html.HiddenFor(model => model.ItemId)
+<div>
+  @using (Html.BeginForm())
+  {
+    @Html.HiddenFor(model => model.ItemId)
 
-  @Html.LabelFor(model => model.Description)
-  @Html.EditorFor(model => model.Description)
+    @Html.LabelFor(model => model.Description)
+    @Html.EditorFor(model => model.Description)
 
-  @Html.LabelFor(model => model.Category)
-  @Html.DropDownList("CategoryId")
+    @Html.LabelFor(model => model.DueDate)
+    @Html.EditorFor(model => model.DueDate, new { htmlAttributes = new { @class = "form-control datepicker date-input", type = "date" } })
+    @* <span>Due date: </span> *@
+    @* <input type="date">  *@
 
-  <input type="submit" value="Save" />
-}
+    @Html.LabelFor(model => model.Category)
+    @Html.DropDownList("CategoryId")
+
+    <input type="submit" value="Save" />
+  }
+</div>
 <p>@Html.ActionLink("Back to list", "Index")</p>

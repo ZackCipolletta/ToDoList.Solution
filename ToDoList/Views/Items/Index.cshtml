@@ -9,7 +9,14 @@
 <ul>
   @foreach(Item item in Model)
   {
-  <li>@Html.ActionLink($"{item.Description}", "Details", new { id = item.ItemId}) | @item.Category.Name</li>
+  <li class="inLine">@Html.ActionLink($"{item.Description}", "Details", new { id = item.ItemId}) | @item.Category.Name 
+    @using (Html.BeginForm("MarkComplete", "Items"))
+{
+    @Html.Hidden("Id", item.ItemId)
+    @Html.CheckBox("Completed")
+    <input type="submit" value="Save"/>
+}
+  </li>   
   }
 </ul>
 

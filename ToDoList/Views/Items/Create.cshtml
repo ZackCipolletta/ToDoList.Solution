@@ -10,8 +10,11 @@
 
 @using (Html.BeginForm())
 {
-  @Html.LabelFor(model => model.Description)
+  @Html.LabelFor(model => model.Description)<span> </span>
   @Html.TextBoxFor(model => model.Description)
+
+  <span>Due date: </span>
+  <input type="date">
 
   @Html.LabelFor(model => model.Category)
   @Html.DropDownList("CategoryId")
