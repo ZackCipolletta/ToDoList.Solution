@@ -27,7 +27,19 @@ namespace ToDoList
                   .AddEntityFrameworkStores<ToDoListContext>()
                   .AddDefaultTokenProviders();
                   // ^^ The first method ensures that the Identity user data is saved via EF Core to our database (as represented by the ToDoListContext class). The second method sets up Identity's providers for tokens, which are created during password reset or two factor authentication, for example.
-      WebApplication app = builder.Build();
+
+      builder.Services.Configure<IdentityOptions>(options =>
+      {
+        // Default Password settings.
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 0;
+        options.Password.RequiredUniqueChars = 0;
+      }); // ^^ overrides all our password requirements, which is helpful while we are in development so we can create accounts to experiment without having to type out long complicated passwords again and again.
+
+      WebApplication app = builder.Build(); 
 
       //   app.UseDeveloperExceptionPage();
       app.UseHttpsRedirection();
