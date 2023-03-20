@@ -4,30 +4,48 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
+
 
 namespace ToDoList.Controllers
 {
+  [Authorize]
+  // ^^ This allows access to the ItemsController only if a user is logged in. We'll add this attribute to a controller whenever we want to limit its access to signed-in users only. We can also add the [Authorize] attribute to individual controller actions. When we add [Authorize] to the ItemsController, the entirety of the controller is shielded from unauthorized users. We can negate this by including an [AllowAnonymous] attribute above any specific methods that we want unauthorized users to have access to. For example, we could put [AllowAnonymous] above the Index route, if we want users to be able to see a list of items, but require authorization before they view details.
   public class ItemsController : Controller
   {
 
     private readonly ToDoListContext _db;
-    public ItemsController(ToDoListContext db)
+    private readonly UserManager<ApplicationUser> _userManager;
+    public ItemsController(UserManager<ApplicationUser> userManager, ToDoListContext db)
     {
+      _userManager = userManager;
       _db = db;
     }
 
-    public ActionResult Index(string sortBy)
+    public async Task<ActionResult> Index(/*string sortBy*/)
     {
-      List<Item> model = null;
-      if (sortBy ==null)
-      {
-        model = _db.Items.Include(item => item.Category).ToList();
-      } 
-      else if (sortBy.Equals("date"))
-      {
-        model = _db.Items.OrderBy(item => item.DueDate).Include(item => item.Category).ToList();
-      }
-      return View(model);
+
+      string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      // ^^we locate the unique identifier for the currently-logged-in user and assign it the variable name userId.
+      ApplicationUser currentUser = await _userManager.FindByIdAsync(userId);
+      List<Item> userItems = _db.Items
+                          .Where(entry => entry.User.Id == currentUser.Id)
+                          .Include(item => item.Category)
+                          .ToList();
+      return View(userItems);
+      // List<Item> model = null;
+      // if (sortBy ==null)
+      // {
+      //   model = _db.Items.Include(item => item.Category).ToList();
+      // } 
+      // else if (sortBy.Equals("date"))
+      // {
+      //   model = _db.Items.OrderBy(item => item.DueDate).Include(item => item.Category).ToList();
+      // }
+      // return View(model);
     }
 
     public ActionResult Create()
@@ -37,15 +55,22 @@ namespace ToDoList.Controllers
     }
 
     [HttpPost]
-    public ActionResult Create (Item item)
+    public async Task<ActionResult> Create(Item item, int CategoryId)
     {
-      if (item.CategoryId == 0)
+      if (!ModelState.IsValid)
       {
-        return RedirectToAction("Create");
+        ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+        return View(item);
       }
-      _db.Items.Add(item);
-      _db.SaveChanges();
-      return RedirectToAction("Index");
+      else
+      {
+        string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        ApplicationUser currentUser = await _userManager.FindByIdAsync(userId);
+        item.User = currentUser;
+        _db.Items.Add(item);
+        _db.SaveChanges();
+        return RedirectToAction("Index");
+      }
     }
 
     public ActionResult Details(int id)
