@@ -5,7 +5,7 @@
 @using ToDoList.Models;
 @model List<Item>;
 
-<h1>Items</h1>
+<h1>Items for @User.Identity.Name</h1>
 
 <ul>
   @foreach(Item item in Model)
